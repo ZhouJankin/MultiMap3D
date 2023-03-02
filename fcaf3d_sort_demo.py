@@ -99,6 +99,16 @@ def callback(data):
     dets = np.concatenate(dets)
     # track_bbs_ids - a numpy array of detections in the format [[x,y,z,l,w,h,yaw,label,score, id],[x,y,z,l,w,h,yaw,label,score, id],...]
     track_bbs_ids = mot_tracker.update(dets)
+    
+    # *********************************************************************************************For Arturs  here
+    
+    get_my_labelArray = track_bbs_ids[..., 7].reshape(-1,1)  # or whatever shape 
+    
+    
+    
+    
+    
+    # *********************************************************************************************
     id = 0
     for object in track_bbs_ids:
             # 创建jsk_recognition_msg中的BoundingBox
