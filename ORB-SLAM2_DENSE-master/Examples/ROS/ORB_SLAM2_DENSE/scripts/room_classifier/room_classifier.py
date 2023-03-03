@@ -9,8 +9,8 @@ from sklearn.svm import SVC
 class RoomClassifier:
   def __init__(self):
     # read our labels from a pickle file
-    self.labels_fname = "labels_shuffled.pkl"
-    self.features_fname = "features_for_each_label.pkl"
+    self.labels_fname = "room_classifier/labels_shuffled.pkl"
+    self.features_fname = "room_classifier/features_for_each_label.pkl"
 
     file = open(self.features_fname,'rb')
     features_for_each_label = pickle.load(file)
@@ -74,8 +74,9 @@ class RoomClassifier:
     input_vectorized  = self.vectorizer.transform([items_as_string_separated_by_space])
     #print(input_vectorized)
     result = self.clf.predict(input_vectorized)
-    
     print("Prediction of: " + items_as_string_separated_by_space + " : " + result[0])
+    return result[0]
+
 
 rc = RoomClassifier()
 rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")

@@ -16,7 +16,7 @@ from mmdet3d.core.points import get_points_type
 from jsk_recognition_msgs.msg import BoundingBox, BoundingBoxArray
 from visualization_msgs.msg import Marker, MarkerArray
 
-from room_classifier/room_classifier import RoomClassifier
+from room_classifier.room_classifier import RoomClassifier
 
 rc = RoomClassifier()
 
@@ -102,11 +102,11 @@ def callback(data):
     
     # *********************************************************************************************For Arturs  here
     
-    get_my_labelArray = track_bbs_ids[..., 7].reshape(-1,1)  # or whatever shape 
+    # get_my_labelArray = track_bbs_ids[..., 7].reshape(-1,1)  # or whatever shape
     
     objects = [obj[7] for obj in track_bbs_ids]
     
-    obj_names = [class_names[i] for i in objects]
+    obj_names = [class_names[i.astype(int)] for i in objects]
     
     # now we'll get the objects into a string separated by a space
     objs_in_room_as_string = ""
@@ -115,7 +115,7 @@ def callback(data):
         
     objs_in_room_as_string = objs_in_room_as_string[:-1]
     
-    rc.predict(objs_in_room_as_string)
+    room_type = rc.predict(objs_in_room_as_string)
     
     # *********************************************************************************************
     id = 0
