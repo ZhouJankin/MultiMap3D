@@ -7,6 +7,10 @@ from time import time
 from sklearn.svm import SVC
 
 class RoomClassifier:
+  ###
+  # Initialises the SVC- either by training from the training data or by loading it from 
+  # a pickle file- depending on the TRAIN_FROM_SCRATCH parameter.
+  ###
   def __init__(self, TRAIN_FROM_SCRATCH = False):
   
     self.load_training_data_and_vectorize()
@@ -21,25 +25,8 @@ class RoomClassifier:
 
         # Now let's train our SVC
         t0 = time()
-        self.clf.fit(features_train_vectorized, labels_train)
+        self.clf.fit(self.features_train_vectorized, self.labels_train)
         print("training time:", round(time()-t0, 3), "s")
-                
-        t0 = time()
-        self.pred = self.clf.predict(self.features_test_vectorized)
-        print("prediction time:", round(time()-t0, 3), "s")
-
-        from sklearn.metrics import accuracy_score
-
-        # Finally learn and test how good model have we got
-        t0 = time()
-        acc = accuracy_score(self.pred, labels_test)
-        print("accuracy calculation time:", round(time()-t0, 3), "s")
-
-        print("Accuracy = ",acc)
-
-        print("Predicted Class for Elem 10:",self.pred[10]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
-
-        print("Real Class for Elem 10:",labels_test[10]," Real Class for Elem 8:",labels_test[8]," Real Class for elem 5:", labels_test[5])
         
         # Now let's save our trained parameters
         pickle.dump(self.clf, open("trained_svc.pkl", "wb"))
@@ -49,6 +36,23 @@ class RoomClassifier:
         self.clf = pickle.load(file)
         file.close()
             
+            
+    t0 = time()
+    self.pred = self.clf.predict(self.features_test_vectorized)
+    print("prediction time:", round(time()-t0, 3), "s")
+
+    from sklearn.metrics import accuracy_score
+
+    # Finally learn and test how good model have we got
+    t0 = time()
+    acc = accuracy_score(self.pred, self.labels_test)
+    print("accuracy calculation time:", round(time()-t0, 3), "s")
+
+    print("Accuracy = ",acc)
+
+    print("Predicted Class for Elem 10:",self.pred[10]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
+
+    print("Real Class for Elem 10:",self.labels_test[10]," Real Class for Elem 8:",self.labels_test[8]," Real Class for elem 5:", self.labels_test[5])
     print(self.clf.classes_)
     #########################################################
 
@@ -69,7 +73,7 @@ class RoomClassifier:
     file.close()
 
     # Now create training and testing sets
-    features_train, features_test, labels_train, labels_test = cross_validation.train_test_split(features_for_each_label, labels_shuffled, test_size=0.1, random_state=1983)
+    features_train, features_test, self.labels_train, self.labels_test = cross_validation.train_test_split(features_for_each_label, labels_shuffled, test_size=0.1, random_state=1983)
 
     # Now we will turn the texts into numerical vectors so that we can use that for machine learning
     #vectorizer = TfidfVectorizer(max_df=1.0, stop_words='english')
@@ -79,12 +83,12 @@ class RoomClassifier:
     #features_train = features_for_each_label
     #labels_train = labels_shuffled
 
-    features_train_vectorized = self.vectorizer.fit_transform(features_train)
+    self.features_train_vectorized = self.vectorizer.fit_transform(features_train)
     self.features_test_vectorized  = self.vectorizer.transform(features_test)
 
     #print "tfidf.get_stop_words(): ",tfidf.get_stop_words()
     #print "vector: ",vector
-    print(features_train_vectorized.shape)
+    print(self.features_train_vectorized.shape)
     print(self.features_test_vectorized.shape)
     print(self.vectorizer.get_feature_names_out())
 
