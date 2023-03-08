@@ -7,7 +7,55 @@ from time import time
 from sklearn.svm import SVC
 
 class RoomClassifier:
-  def __init__(self):
+  def __init__(self, TRAIN_FROM_SCRATCH = False):
+  
+    self.load_training_data_and_vectorize()
+  
+    # We can either load pre-trained settings or train from scratch
+    if TRAIN_FROM_SCRATCH:
+        # We will use an Support Vector Classifier
+        self.clf = SVC(kernel="rbf", C=10000.0)
+
+        #features_train = features_train[:len(features_train)/100]
+        #labels_train = labels_train[:len(labels_train)/100]
+
+        # Now let's train our SVC
+        t0 = time()
+        self.clf.fit(features_train_vectorized, labels_train)
+        print("training time:", round(time()-t0, 3), "s")
+                
+        t0 = time()
+        self.pred = self.clf.predict(self.features_test_vectorized)
+        print("prediction time:", round(time()-t0, 3), "s")
+
+        from sklearn.metrics import accuracy_score
+
+        # Finally learn and test how good model have we got
+        t0 = time()
+        acc = accuracy_score(self.pred, labels_test)
+        print("accuracy calculation time:", round(time()-t0, 3), "s")
+
+        print("Accuracy = ",acc)
+
+        print("Predicted Class for Elem 10:",self.pred[10]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
+
+        print("Real Class for Elem 10:",labels_test[10]," Real Class for Elem 8:",labels_test[8]," Real Class for elem 5:", labels_test[5])
+        
+        # Now let's save our trained parameters
+        pickle.dump(self.clf, open("trained_svc.pkl", "wb"))
+
+    else: # so we want to load pre-trained parameters
+        file = open("trained_svc.pkl",'rb')
+        self.clf = pickle.load(file)
+        file.close()
+            
+    print(self.clf.classes_)
+    #########################################################
+
+  ###
+  # Loads training data from pickle files and vecorizes the data for use in the SVC
+  ###  
+  def load_training_data_and_vectorize(self):
     # read our labels from a pickle file
     self.labels_fname = "room_classifier/labels_shuffled.pkl"
     self.features_fname = "room_classifier/features_for_each_label.pkl"
@@ -40,36 +88,9 @@ class RoomClassifier:
     print(self.features_test_vectorized.shape)
     print(self.vectorizer.get_feature_names_out())
 
-
-    # Finally learn and test how good model have we got
-    self.clf = SVC(kernel="rbf", C=10000.0)
-
-    #features_train = features_train[:len(features_train)/100]
-    #labels_train = labels_train[:len(labels_train)/100]
-
-    t0 = time()
-    self.clf.fit(features_train_vectorized, labels_train)
-    print("training time:", round(time()-t0, 3), "s")
-
-    t0 = time()
-    self.pred = self.clf.predict(self.features_test_vectorized)
-    print("prediction time:", round(time()-t0, 3), "s")
-
-    from sklearn.metrics import accuracy_score
-
-    to = time()
-    acc = accuracy_score(self.pred, labels_test)
-    print("accuracy calculation time:", round(time()-t0, 3), "s")
-
-    print("Accuracy = ",acc)
-
-    print("Predicted Class for Elem 10:",self.pred[10]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
-
-    print("Real Class for Elem 10:",labels_test[10]," Real Class for Elem 8:",labels_test[8]," Real Class for elem 5:", labels_test[5])
-    
-    print(self.clf.classes_)
-    #########################################################
-
+  ###
+  # Uses the cassifier to predict a room based on the input elements found in the room
+  ###
   def predict(self, items_as_string_separated_by_space):
     input_vectorized  = self.vectorizer.transform([items_as_string_separated_by_space])
     #print(input_vectorized)
@@ -78,7 +99,7 @@ class RoomClassifier:
     return result[0]
 
 
-rc = RoomClassifier()
+rc = RoomClassifier(False)
 rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce SaltShaker")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce")
@@ -89,4 +110,9 @@ rc.predict("Candle Plunger ScrubBrush Toilet")
 rc.predict("TV Sofa")
 rc.predict("ScrubBrush ToiletCandle Plunger")
 
+rc.predict("sink garbagebin door cabinet counter refrigerator window")
+rc.predict("window table bed desk")
+rc.predict("sofa door table window bookshelf curtain desk chair picture")
+rc.predict("door picture window curtain")
+rc.predict("garbagebin counter refrigerator cabinet")
 

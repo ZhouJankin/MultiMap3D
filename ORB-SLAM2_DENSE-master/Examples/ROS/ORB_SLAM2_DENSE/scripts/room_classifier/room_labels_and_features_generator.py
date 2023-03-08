@@ -34,7 +34,7 @@ possible_items_in_each_room = [
 
 training_data = []
 
-TRAINING_DATASETS_TO_GENERATE = 120
+TRAINING_DATASETS_TO_GENERATE = 12000
 
 # generate some data by randomizing potential objects in each room category
 for i in range(TRAINING_DATASETS_TO_GENERATE):
