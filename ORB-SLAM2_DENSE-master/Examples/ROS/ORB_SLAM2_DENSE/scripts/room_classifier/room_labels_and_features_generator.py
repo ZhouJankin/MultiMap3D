@@ -24,14 +24,14 @@ training_data = []
 
 # generate some data by randomizing potential objects in each room category
 for i in range(120):
-    rt = random.randrange(0, len(room_types) - 1) # choose room type to generate
+    rt = random.randrange(0, len(room_types)) # choose room type to generate
     max_item_count_in_room = len(possible_items_in_each_room[rt][1]) # how many classes of items do we have in this type of room
     
-    item_cnt_to_generate = random.randrange(1, max_item_count_in_room) # how many items we will generate for this room
+    item_cnt_to_generate = random.randrange(1, max_item_count_in_room + 1) # how many items we will generate for this room
     
     print(str(rt) + " " + str(max_item_count_in_room) + " " + str(item_cnt_to_generate))
     
-    item_indexes = random.sample(range(0, max_item_count_in_room - 1), item_cnt_to_generate) # the indexes of the generated items
+    item_indexes = random.sample(range(0, max_item_count_in_room), item_cnt_to_generate) # the indexes of the generated items
     training_data.append((room_types[rt], [possible_items_in_each_room[rt][1][idx] for idx in item_indexes]))
 
 print(training_data)
