@@ -56,6 +56,11 @@ class RoomClassifierTrainingDataGenerator:
         
         self.TRAINING_DATASETS_TO_GENERATE = 16000
         self.generate_training_data(gen_flavour, room_types, possible_items_in_each_room)
+    elif gen_flavour == ModelType.AI2_THOR_12:
+        detectable_items = ['bed', 'table', 'sofa', 'chair', 'toilet', 'desk', 'dresser',
+                       'night_stand', 'bookshelf', 'bathtub']
+                       
+        
     else:
         raise ValueError("Please select a valid generator flavour")
 
@@ -99,8 +104,9 @@ class RoomClassifierTrainingDataGenerator:
 
     #print(training_data)
 
-#gen_flavour = ModelType.FEATURES_12 # here we make a choice of which model we will generate the samples for.
-gen_flavour = ModelType.FEATURES_18
+# here we make a choice of which model we will generate the samples for.
+#gen_flavour = ModelType.FEATURES_12 
+gen_flavour = ModelType.AI2_THOR_12
 
 gen = RoomClassifierTrainingDataGenerator(gen_flavour)
 
