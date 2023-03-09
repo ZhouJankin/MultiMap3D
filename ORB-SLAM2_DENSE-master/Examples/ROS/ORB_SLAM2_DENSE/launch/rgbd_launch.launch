@@ -12,6 +12,7 @@
     <arg name="use_pcl_pub" default="true" />
     <!-- broadcast frame id args -->
     <arg name="map_frame" default="map" />
+    <arg name="grid_frame" default="grid" />
     <arg name="odom_frame" default="odom" />
     <arg name="footprint_frame" default="camera_footprint" />
     <arg name="optical_frame" default="camera_optical" />
@@ -32,6 +33,7 @@
         <param name="use_pcl_pub" type="bool" value="$(arg use_pcl_pub)" />
         <!-- frame_id parameters -->
         <param name="map_frame" type="str" value="$(arg map_frame)" />
+        <param name="grid_frame" type="str" value="$(arg grid_frame)" />
         <param name="odom_frame" type="str" value="$(arg odom_frame)" />
         <param name="footprint_frame" type="str" value="$(arg footprint_frame)" />
         <param name="optical_frame" type="str" value="$(arg optical_frame)" />

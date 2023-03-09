@@ -103,7 +103,7 @@ class RoomClassifier:
     return result[0]
 
 
-rc = RoomClassifier(False)
+rc = RoomClassifier(True)
 rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce SaltShaker")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce")

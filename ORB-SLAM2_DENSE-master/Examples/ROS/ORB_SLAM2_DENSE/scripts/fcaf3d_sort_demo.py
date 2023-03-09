@@ -116,6 +116,23 @@ def callback(data):
     objs_in_room_as_string = objs_in_room_as_string[:-1]
     
     room_type = rc.predict(objs_in_room_as_string)
+
+    # marker = Marker()
+    # marker.header.frame_id = 'camera_optical'
+    # marker.action = Marker.ADD
+    # marker.id = -1
+    # marker.type = Marker.TEXT_VIEW_FACING
+    # marker.text = room_type
+    # marker.pose.position.x = 0.0
+    # marker.pose.position.y = 0.0
+    # marker.pose.position.z = 10.0
+    # marker.pose.orientation.w = 1.0
+    # marker.scale.z = 0.2
+    # marker.color.r = 1.0
+    # marker.color.g = 1.0
+    # marker.color.b = 1.0
+    # marker.color.a = 1.0
+    # marker_array.markers.append(marker)
     
     # *********************************************************************************************
     id = 0

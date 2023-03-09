@@ -353,6 +353,7 @@ void PointCloudMapping::run()
                 PointCloud::Ptr pSegmentedPlane(new PointCloud());
                 Eigen::Vector4d planeCoeffs;
                 pcl::PointIndices::Ptr inliers(new pcl::PointIndices());
+                //上一次只是对局部关键帧点云的平面分割，这次是对所有平面再分割一次
                 bool bPlaneSegmentation = planeSACSegmentation(pFramePlane, pSegmentedPlane, planeCoeffs, mLastPlaneCoeffs, inliers);
                 if (bPlaneSegmentation)
                 {
@@ -710,13 +711,16 @@ bool PointCloudMapping::planeSACSegmentation(PointCloud::Ptr &pPclMap, PointClou
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices());
     pcl::SACSegmentation<PointCloudMapping::PointT> seg;
     
-    // perform segment
+    // perform segment 平面分割
     seg.setOptimizeCoefficients(true);
     seg.setModelType (pcl::SACMODEL_PLANE);
     seg.setMethodType (pcl::SAC_RANSAC);
+    //平面分割的距离阈值 0.15
     seg.setDistanceThreshold (mfPlaneDistThres);  // 距离阈值
     seg.setInputCloud(pPclMap);
+    //返回的inliers是内点的索引，pcl_coeffs是平面的参数 ax+by+cz+d = 0; a,b,c是法线
     seg.segment(*inliers, *pcl_coeffs);
+    
     
     // segment directly fail
     if (inliers->indices.size() == 0)
@@ -730,10 +734,12 @@ bool PointCloudMapping::planeSACSegmentation(PointCloud::Ptr &pPclMap, PointClou
     planeCoeffs[2] = pcl_coeffs->values[2];
     planeCoeffs[3] = pcl_coeffs->values[3];
     
-    // norm vector
+
+    // norm vector 新分割的法向量 与上一次的法向量
+    //获取从向量的第i个元素开始的n个元素：vector.segment(i,n);
     Eigen::Vector3d norm_plane = planeCoeffs.segment(0, 3);
     Eigen::Vector3d norm_last_plane = lastPlaneCoeffs.segment(0, 3);
-    planeCoeffs = planeCoeffs / norm_plane.norm();  // normalize sacle
+    planeCoeffs = planeCoeffs / norm_plane.norm();  // normalize sacle 尺度归一化 单位向量
     
     // check angle between current estimated plane and last estimated plane
     double angle_last = acos( norm_plane.dot(norm_last_plane) / (norm_plane.norm()*norm_last_plane.norm()) );
@@ -746,6 +752,14 @@ bool PointCloudMapping::planeSACSegmentation(PointCloud::Ptr &pPclMap, PointClou
         angle_last = acos( norm_plane.dot(norm_last_plane) / (norm_plane.norm()*norm_last_plane.norm()) );
     }
     if ( fabs(angle_last) > M_PI/12 )
+    {
+        cerr << "Segment ground plane fail, "
+                "fail segment parameters: " << planeCoeffs.transpose()
+             << ", relative angle: " << angle_last << endl;
+        planeCoeffs = lastPlaneCoeffs;  // roll back...
+        return false;
+    }
+    if (planeCoeffs[3] < 0)
     {
         cerr << "Segment ground plane fail, "
                 "fail segment parameters: " << planeCoeffs.transpose()
@@ -783,13 +797,16 @@ bool PointCloudMapping::planeSACSegmentation(PointCloud::Ptr &pPclMap, PointClou
 bool PointCloudMapping::framePlaneSegmentation(PointCloud::Ptr &pPclFrame, PointCloud::Ptr &pPclPlane)
 {
     // pass through-->sac segmentation-->indices filter
-    // pass through filter with y axis
+    // pass through filter with z axis
     PointCloud::Ptr pFramePassFilter(new PointCloud());
     vector<int> vFramePassIdxs;
+    //直通滤波器pass 沿z轴滤波 参数 -0.5 ~ +0.5
     pcl::PassThrough<PointT> pass;
     pass.setInputCloud(pPclFrame);
     pass.setFilterFieldName("z");
-    pass.setFilterLimits(-mfFramePlaneDistThres, +mfFramePlaneDistThres);
+    //update 
+    //pass.setFilterLimits(-mfFramePlaneDistThres, +mfFramePlaneDistThres);
+    pass.setFilterLimits(-mfFramePlaneDistThres, 0.2);
     pass.filter(*pFramePassFilter);
     pass.filter(vFramePassIdxs);
 
@@ -810,6 +827,7 @@ bool PointCloudMapping::framePlaneSegmentation(PointCloud::Ptr &pPclFrame, Point
         return false;
 
     // remove plane from original point cloud
+    // 因为planeSACSegmentation中返回的pFramePassFilter是直通滤波之后的不包含平面的点云，现在需要在原点云内去除地面点云。
     pcl::PointIndices::Ptr pFrameInliers(new pcl::PointIndices());
     for (int i=0; i<pInliers->indices.size(); i++)
     {

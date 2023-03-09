@@ -49,6 +49,8 @@ namespace ORB_SLAM2_DENSE
 //        private_nh_.param("plane_dist_thres", plane_dist_thres_, 0.2);
         //get frame id
         private_nh_.param("map_frame", map_frame_, std::string("map"));
+        //update 新增grid_frame
+        private_nh_.param("grid_frame", grid_frame_, std::string("grid"));
         private_nh_.param("odom_frame", odom_frame_, std::string("odom"));
         private_nh_.param("footprint_frame", footprint_frame_, std::string("camera_footprint"));
         private_nh_.param("optical_frame", optical_frame_, std::string("camera_optical"));
@@ -122,11 +124,20 @@ namespace ORB_SLAM2_DENSE
             mpPclMapper_->getPlaneTransformMatrix(Eigen::Vector4d(0,0,1,0), plane_coeffs_, mTmo);
 //            ROS_WARN_STREAM("map<--odom transform:\n" << mTmo);
             Eigen::Matrix3d mRmo = mTmo.block(0,0,3,3);
+            //得到/map坐标系与/odom坐标系在z轴上的平移量
             double tz = mTmo(2,3);
             tf::Matrix3x3 Rmo;
             tf::matrixEigenToTF(mRmo, Rmo);
+            //发布/odom坐标系的位置
             tf::StampedTransform trans(tf::Transform(Rmo, tf::Vector3(0, 0, tz)), ros::Time::now(), map_frame_, odom_frame_);
             broadcaster_.sendTransform(trans);
+            //update
+            Eigen::Matrix3d I2 = Eigen::Matrix3d::Identity();
+            tf::Matrix3x3 Rmg2;
+            tf::matrixEigenToTF(I2, Rmg2);
+            //update /grid 超参数要改 grid在map中
+            tf::StampedTransform trans_grid(tf::Transform(Rmg2, tf::Vector3(0, 0, - 4)), ros::Time::now(), map_frame_, grid_frame_);
+            broadcaster_.sendTransform(trans_grid);
         }
         
         // update SLAM PointCloudMapping thread extrinsic matrix
@@ -204,12 +215,18 @@ namespace ORB_SLAM2_DENSE
 //            ROS_WARN_STREAM("map<--odom transform:\n" << mTmo);
             if (use_tf_)
             {
+                Eigen::Matrix3d I = Eigen::Matrix3d::Identity();
+                tf::Matrix3x3 Rmg;
+                tf::matrixEigenToTF(I, Rmg);
                 Eigen::Matrix3d mRmo = mTmo.block(0,0,3,3);
                 double tz = mTmo(2,3);
                 tf::Matrix3x3 Rmo;
                 tf::matrixEigenToTF(mRmo, Rmo);
                 tf::StampedTransform trans(tf::Transform(Rmo, tf::Vector3(0, 0, tz)), ros::Time::now(), map_frame_, odom_frame_);
                 broadcaster_.sendTransform(trans);
+                //update  发布 /grid坐标系的位置
+                tf::StampedTransform trans_grid(tf::Transform(Rmg, tf::Vector3(0, 0, -4)), ros::Time::now(), map_frame_, grid_frame_);
+                broadcaster_.sendTransform(trans_grid);
             }
 
             // transform point cloud to the plane
@@ -223,6 +240,9 @@ namespace ORB_SLAM2_DENSE
             Tmo.setIdentity();
             tf::StampedTransform trans(Tmo, ros::Time::now(), map_frame_, odom_frame_);
             broadcaster_.sendTransform(trans);
+            //update /grid 发布
+            tf::StampedTransform trans_grid(Tmo, ros::Time::now(), map_frame_, grid_frame_);
+            broadcaster_.sendTransform(trans_grid);
         }
 
 
