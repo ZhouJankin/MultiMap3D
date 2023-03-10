@@ -6,7 +6,7 @@ from enum import Enum
 # generate the samples for. This enum will help with that.
 ###
 class ModelType(Enum):
-    FEATURES_12 = 12 # for the model with 12 detectable classes
+    FEATURES_12 = 12 # for the model with 12 detectable classes # Turns out that FEATURES_12 detector a.k.a. sunrgbd class actually only provides 10 classes, not 12, but I'm not changing this anymore because it's referenced in many places in code.
     FEATURES_18 = 18 # for the model with 18 detectable classes
     AI2_THOR = 100
     AI2_THOR_12 = 112 # for AI2-THOR training data with classes filtered out to only contain the 12 from the 12-sample detection engine
