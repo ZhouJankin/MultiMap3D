@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from time import time
 from sklearn.svm import SVC
-from room_labels_and_features_generator import ModelType
+from ModelType import ModelType
 
 class RoomClassifier:
   ###
@@ -51,9 +51,9 @@ class RoomClassifier:
 
     print("Accuracy = ",acc)
 
-    print("Predicted Class for Elem 10:",self.pred[10]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
+    print("Predicted Class for Elem 3:",self.pred[3]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
 
-    print("Real Class for Elem 10:",self.labels_test[10]," Real Class for Elem 8:",self.labels_test[8]," Real Class for elem 5:", self.labels_test[5])
+    print("Real Class for Elem 3:",self.labels_test[3]," Real Class for Elem 8:",self.labels_test[8]," Real Class for elem 5:", self.labels_test[5])
     print(self.clf.classes_)
     #########################################################
 
@@ -104,7 +104,7 @@ class RoomClassifier:
     return result[0]
 
 
-rc = RoomClassifier(True, ModelType.FEATURES_18)
+rc = RoomClassifier(True, ModelType.AI2_THOR_12)
 rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce SaltShaker")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce")
