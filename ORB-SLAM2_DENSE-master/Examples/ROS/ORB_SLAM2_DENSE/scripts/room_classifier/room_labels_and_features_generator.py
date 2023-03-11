@@ -69,8 +69,8 @@ class RoomClassifierTrainingDataGenerator:
                      'vacuumcleaner', 'vase', 'watch', 'wateringcan', 'window', 'winebottle'] # these items are available in AI2-THOR framework
                      
         items_to_convert = ['armchair', 'bathtubbasin', 'coffeetable', 
-                     'desktop', 'diningtable', 'sidetable', 'shelf'] # these items we will need to convert from AI2-THOR vocabulary to ours
-        converting_to = ['chair', 'bathtub', 'table', 'desk', 'table', 'table', 'bookshelf'] # We will convert AI2-THOR vocabulary to this one
+                     'desktop', 'diningtable', 'sidetable', 'shelf', 'shelvingunit'] # these items we will need to convert from AI2-THOR vocabulary to ours
+        converting_to = ['chair', 'bathtub', 'table', 'desk', 'table', 'table', 'bookshelf', 'bookshelf'] # We will convert AI2-THOR vocabulary to this one
                      
         items_transferred_directly = ['bed', 'bathtub', 'chair', 'desk', 'dresser', 'sofa', 'toilet'] # These items are the same in our vocabulary and AI2-THOR. missing: night_stand
                      
@@ -82,7 +82,7 @@ class RoomClassifierTrainingDataGenerator:
                      'lettuce', 'lightswitch', 'microwave', 'mirror', 'mug', 'newspaper', 'ottoman',
                      'painting', 'pan', 'papertowelroll', 'pen', 'pencil', 'peppershaker', 'pillow',
                      'plate', 'plunger', 'poster', 'pot', 'potato', 'remotecontrol', 'roomdecor',
-                     'safe', 'saltshaker', 'scrubbrush', 'shelf', 'shelvingunit', 'showercurtain',
+                     'safe', 'saltshaker', 'scrubbrush', 'shelf', 'showercurtain',
                      'showerdoor', 'showerglass', 'showerhead', 'soapbar', 'soapbottle', 'spatula', 'spoon', 'spraybottle', 'statue',
                      'stool', 'stoveburner', 'stoveknob', 'tabletopdecor', 'teddybear',
                      'television', 'tennisracket', 'tissuebox', 'toaster', 'toiletpaper',
@@ -91,40 +91,102 @@ class RoomClassifierTrainingDataGenerator:
                      
         room_types = ['bedroom', 'bathroom', 'living room'] # With the detectable models that we have, we'll be able to detect these rooms. There is nothing to detect for kitchen, so dropping that from AI2-THOR room labels.
 
-        labels_filtered = []
-        features_for_each_label_filtered = []
+        self.convert_ai2_thor_training_data(gen_flavour, room_types, items_to_remove, items_to_convert, converting_to)
+    elif gen_flavour == ModelType.AI2_THOR_18:
+        detectable_items = ['cabinet', 'bed', 'chair', 'sofa', 'table', 'door', 'window',
+                        'bookshelf', 'picture', 'counter', 'desk', 'curtain',
+                        'refrigerator', 'showercurtrain', 'toilet', 'sink', 'bathtub',
+                        'garbagebin'] # these items we can detect with our framework
+                                            
+        available_items = ['alarmclock', 'apple', 'armchair', 'baseballbat', 'basketball', 'bathtub',
+                     'bathtubbasin', 'bed', 'blinds', 'book', 'boots', 'bottle', 'bowl', 'box',
+                     'bread', 'butterknife', 'cabinet', 'candle', 'cd', 'cellphone', 'chair', 'cloth',
+                     'coffeemachine', 'coffeetable', 'countertop', 'creditcard', 'cup', 'curtains',
+                     'desk', 'desklamp', 'desktop', 'diningtable', 'dishsponge', 'dogbed', 'drawer',
+                     'dresser', 'dumbbell', 'egg', 'faucet', 'floor', 'floorlamp', 'footstool',
+                     'fork', 'fridge', 'garbagebag', 'garbagecan', 'handtowel', 'handtowelholder',
+                     'houseplant', 'kettle', 'keychain', 'knife', 'ladle', 'laptop', 'laundryhamper',
+                     'lettuce', 'lightswitch', 'microwave', 'mirror', 'mug', 'newspaper', 'ottoman',
+                     'painting', 'pan', 'papertowelroll', 'pen', 'pencil', 'peppershaker', 'pillow',
+                     'plate', 'plunger', 'poster', 'pot', 'potato', 'remotecontrol', 'roomdecor',
+                     'safe', 'saltshaker', 'scrubbrush', 'shelf', 'shelvingunit', 'showercurtain',
+                     'showerdoor', 'showerglass', 'showerhead', 'sidetable', 'sink', 'sinkbasin',
+                     'soapbar', 'soapbottle', 'sofa', 'spatula', 'spoon', 'spraybottle', 'statue',
+                     'stool', 'stoveburner', 'stoveknob', 'tabletopdecor', 'teddybear',
+                     'television', 'tennisracket', 'tissuebox', 'toaster', 'toilet', 'toiletpaper',
+                     'toiletpaperhanger', 'tomato', 'towel', 'towelholder', 'tvstand',
+                     'vacuumcleaner', 'vase', 'watch', 'wateringcan', 'window', 'winebottle'] # these items are available in AI2-THOR framework
+                     
+        items_to_convert = ['armchair', 'bathtubbasin', 'coffeetable', 'countertop', 'curtains',
+                     'desktop', 'diningtable', 'fridge', 'garbagecan', 
+                     'painting', 'poster', 'shelf', 'shelvingunit', 'showerdoor', 'sidetable', 'sinkbasin'] # these items we will need to convert from AI2-THOR vocabulary to ours
+        converting_to = ['chair', 'bathtub', 'table', 'counter', 'curtain', 
+                     'desk', 'table', 'refrigerator', 'garbagebin', 
+                     'picture', 'picture', 'bookshelf', 'bookshelf', 'door', 'table', 'sink'] # We will convert AI2-THOR vocabulary to this one
+                     
+        items_transferred_directly = ['bathtub', 'bed', 'cabinet', 'chair', 'table', 'desk', 'sink', 'sofa', 'toilet', 'window', 'showercurtain'] # These items are the same in our vocabulary and AI2-THOR.
+        items_to_remove = ['alarmclock', 'apple', 'baseballbat', 'basketball', 'candle', 'cd', 'cellphone', 'cloth',
+                     'coffeemachine', 'creditcard', 'cup', 'desklamp', 'garbagebag', 'handtowel', 'handtowelholder',
+                     'houseplant', 'kettle', 'keychain', 'knife', 'ladle', 'laptop', 'laundryhamper',
+                     'lettuce', 'lightswitch', 'microwave', 'mirror', 'mug', 'newspaper', 'ottoman', 'pan', 'papertowelroll', 'pen', 'pencil', 'peppershaker', 'pillow',
+                     'plate', 'plunger', 'pot', 'potato', 'remotecontrol', 'roomdecor',
+                     'safe', 'saltshaker', 'scrubbrush', 'showerglass', 'showerhead', 'soapbar', 'soapbottle', 'spatula', 'spoon', 'spraybottle', 'statue',
+                     'stool', 'stoveburner', 'stoveknob', 'tabletopdecor', 'teddybear',
+                     'television', 'tennisracket', 'tissuebox', 'toaster', 'toiletpaper',
+                     'toiletpaperhanger', 'tomato', 'towel', 'towelholder', 'tvstand',
+                     'vacuumcleaner', 'vase', 'watch', 'wateringcan', 'winebottle', 'blinds', 'book', 'boots', 'bottle', 'bowl', 'box',
+                     'bread', 'butterknife', 'dishsponge', 'dogbed', 'drawer',
+                     'dresser', 'dumbbell', 'egg', 'faucet', 'floor', 'floorlamp', 'footstool',
+                     'fork'] # These items we will need to remove from AI2-THOR provided set because our model can't detect them.
+                     
+        room_types = ['bedroom', 'bathroom', 'living room', 'kitchen'] # With the detectable models that we have, we'll be able to detect these rooms. There is nothing to detect for kitchen, so dropping that from AI2-THOR room labels.
 
-        file = open("labels_shuffled_AI2_THOR.pkl", "rb")
-        labels_shuffled = pickle.load(file)
-        file.close()
-
-        file = open("features_for_each_label_AI2_THOR.pkl", "rb")
-        features_for_each_label = pickle.load(file)
-        file.close()
-        
-        # go through all our labels
-        for i in range(len(labels_shuffled)):
-            if labels_shuffled[i] in room_types: # if the room type is detectable, then filter the features
-                labels_filtered.append(labels_shuffled[i]) # remember the label
-                features_for_this_label_filtered = list(set([e.lower() for e in features_for_each_label[i].split()]) - set(items_to_remove)) # remove the features we can't detect
-                #print(features_for_each_label[i])
-                features_for_this_label_filtered_converted = [] 
-                for feature in features_for_this_label_filtered: # convert feature names from AI2-THOR vocabulary to ours
-                    if feature in items_to_convert: # if we have a feature that needs to be converted
-                        features_for_this_label_filtered_converted.append(converting_to[items_to_convert.index(feature)]) # then convert it
-                    else:
-                        features_for_this_label_filtered_converted.append(feature) # otherwise take the feature as is
-        
-                features_for_each_label_filtered.append(" ".join(str(e) for e in list(dict.fromkeys(features_for_this_label_filtered_converted)))) # remove duplicates and remember the filtered and converted feature list for this room
-                
-                #print(labels_shuffled[i] + " : ")
-                #print(" ".join(str(e) for e in list(dict.fromkeys(features_for_this_label_filtered_converted))))
-                
-        pickle.dump(labels_filtered, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
-        pickle.dump(features_for_each_label_filtered, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
+        self.convert_ai2_thor_training_data(gen_flavour, room_types, items_to_remove, items_to_convert, converting_to)
     else:
         raise ValueError("Please select a valid generator flavour")
 
+  ###
+  # This will generate surrogate training data by taking real scenarios from AI2-THOR and then dropping the items that our models can't detect
+  # and converting the ones that it can to our vocabulary.
+  # This handles the cases of AI2_THOR_12 and AI2_THOR_18 model types (a.k.a. as sunrgbd and scannet adapted for AI2-THOR data).
+  ###
+  def convert_ai2_thor_training_data(self, gen_flavour, room_types, items_to_remove, items_to_convert, converting_to):
+    labels_filtered = []
+    features_for_each_label_filtered = []
+
+    file = open("labels_shuffled_AI2_THOR.pkl", "rb")
+    labels_shuffled = pickle.load(file)
+    file.close()
+
+    file = open("features_for_each_label_AI2_THOR.pkl", "rb")
+    features_for_each_label = pickle.load(file)
+    file.close()
+    
+    # go through all our labels
+    for i in range(len(labels_shuffled)):
+        if labels_shuffled[i] in room_types: # if the room type is detectable, then filter the features
+            labels_filtered.append(labels_shuffled[i]) # remember the label
+            features_for_this_label_filtered = list(set([e.lower() for e in features_for_each_label[i].split()]) - set(items_to_remove)) # remove the features we can't detect
+            #print(features_for_each_label[i])
+            features_for_this_label_filtered_converted = [] 
+            for feature in features_for_this_label_filtered: # convert feature names from AI2-THOR vocabulary to ours
+                if feature in items_to_convert: # if we have a feature that needs to be converted
+                    features_for_this_label_filtered_converted.append(converting_to[items_to_convert.index(feature)]) # then convert it
+                else:
+                    features_for_this_label_filtered_converted.append(feature) # otherwise take the feature as is
+    
+            features_for_each_label_filtered.append(" ".join(str(e) for e in list(dict.fromkeys(features_for_this_label_filtered_converted)))) # remove duplicates and remember the filtered and converted feature list for this room
+            
+            #print(labels_shuffled[i] + " : ")
+            #print(" ".join(str(e) for e in list(dict.fromkeys(features_for_this_label_filtered_converted))))
+            
+    pickle.dump(labels_filtered, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
+    pickle.dump(features_for_each_label_filtered, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
+
+  ###
+  # This will generate surrogate training data from scratch by randomising items in each room type from a set of allowed items for that room type.
+  # This handles the cases of FEATURES_12 and FEATURES_18 model types (a.k.a. as sunrgbd and scannet)
+  ###
   def generate_training_data(self, gen_flavour, room_types, possible_items_in_each_room):
     training_data = []
 
@@ -167,7 +229,7 @@ class RoomClassifierTrainingDataGenerator:
 
 # here we make a choice of which model we will generate the samples for.
 #gen_flavour = ModelType.FEATURES_12 
-gen_flavour = ModelType.AI2_THOR_12
+gen_flavour = ModelType.AI2_THOR_18
 
 gen = RoomClassifierTrainingDataGenerator(gen_flavour)
 

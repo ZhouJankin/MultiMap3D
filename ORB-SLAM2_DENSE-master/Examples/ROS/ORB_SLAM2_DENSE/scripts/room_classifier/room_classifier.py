@@ -104,7 +104,7 @@ class RoomClassifier:
     return result[0]
 
 
-rc = RoomClassifier(True, ModelType.AI2_THOR_12)
+rc = RoomClassifier(True, ModelType.AI2_THOR_18)
 rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce SaltShaker")
 rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce")
