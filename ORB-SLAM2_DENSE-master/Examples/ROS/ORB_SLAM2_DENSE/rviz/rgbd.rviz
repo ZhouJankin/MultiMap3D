@@ -97,13 +97,29 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base_link_gt:
+          Value: true
         camera_footprint:
           Value: true
         camera_optical:
           Value: true
+        front_lidar:
+          Value: true
+        grid:
+          Value: true
+        left_cam:
+          Value: true
         map:
           Value: true
+        object:
+          Value: true
         odom:
+          Value: true
+        rear_lidar:
+          Value: true
+        right_cam:
+          Value: true
+        world:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -112,6 +128,10 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
+          grid:
+            {}
+          object:
+            {}
           odom:
             camera_footprint:
               camera_optical:
@@ -198,16 +218,16 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: Grid Map
       Topic: /projected_map
       Unreliable: false
       Use Timestamp: false
-      Value: false
+      Value: true
     - Class: jsk_rviz_plugin/BoundingBoxArray
       Enabled: true
       Name: BoundingBoxArray
-      Topic: /Boxes_result
+      Topic: /Boxes_3D
       Unreliable: false
       Value: true
       alpha: 0.800000011920929
@@ -218,10 +238,10 @@ Visualization Manager:
       show coords: false
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /label_result
+      Marker Topic: /label_3D
       Name: MarkerArray
       Namespaces:
-        {}
+        "": true
       Queue Size: 1
       Value: true
     - Alpha: 1
@@ -252,9 +272,49 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
+    - Class: jsk_rviz_plugin/BoundingBoxArray
+      Enabled: true
+      Name: BoundingBoxArray
+      Topic: /Boxes_grid
+      Unreliable: false
+      Value: true
+      alpha: 0.800000011920929
+      color: 25; 255; 0
+      coloring: Auto
+      line width: 0.004999999888241291
+      only edge: false
+      show coords: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /label_grid
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: jsk_rviz_plugin/BoundingBoxArray
+      Enabled: true
+      Name: BoundingBoxArray
+      Topic: /Boxes_object
+      Unreliable: false
+      Value: true
+      alpha: 0.800000011920929
+      color: 25; 255; 0
+      coloring: Auto
+      line width: 0.004999999888241291
+      only edge: false
+      show coords: false
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /label_object
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
-    Background Color: 48; 48; 48
+    Background Color: 85; 87; 83
     Default Light: true
     Fixed Frame: map
     Frame Rate: 30
@@ -280,7 +340,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 10
+      Distance: 62.50388717651367
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -295,10 +355,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3653985857963562
+      Pitch: 0.0003986060619354248
       Target Frame: camera_optical
       Value: ThirdPersonFollower (rviz)
-      Yaw: 4.630441188812256
+      Yaw: 4.487288475036621
     Saved: ~
 Window Geometry:
   Displays:

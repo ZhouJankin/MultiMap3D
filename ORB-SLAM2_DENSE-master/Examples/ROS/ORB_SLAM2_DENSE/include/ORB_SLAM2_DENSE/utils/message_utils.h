@@ -88,6 +88,7 @@ namespace ORB_SLAM2_DENSE
         std::string map_frame_;
         //update 
         std::string grid_frame_;
+        std::string object_frame_;
         std::string odom_frame_;
         std::string footprint_frame_;
         std::string optical_frame_;

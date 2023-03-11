@@ -49,8 +49,9 @@ namespace ORB_SLAM2_DENSE
 //        private_nh_.param("plane_dist_thres", plane_dist_thres_, 0.2);
         //get frame id
         private_nh_.param("map_frame", map_frame_, std::string("map"));
-        //update 新增grid_frame
+        //update 新增grid_frame 和object_frame
         private_nh_.param("grid_frame", grid_frame_, std::string("grid"));
+        private_nh_.param("object_frame", object_frame_, std::string("object"));
         private_nh_.param("odom_frame", odom_frame_, std::string("odom"));
         private_nh_.param("footprint_frame", footprint_frame_, std::string("camera_footprint"));
         private_nh_.param("optical_frame", optical_frame_, std::string("camera_optical"));
@@ -137,7 +138,9 @@ namespace ORB_SLAM2_DENSE
             tf::matrixEigenToTF(I2, Rmg2);
             //update /grid 超参数要改 grid在map中
             tf::StampedTransform trans_grid(tf::Transform(Rmg2, tf::Vector3(0, 0, - 4)), ros::Time::now(), map_frame_, grid_frame_);
+            tf::StampedTransform trans_object(tf::Transform(Rmg2, tf::Vector3(0, 0, 8)), ros::Time::now(), map_frame_, object_frame_);
             broadcaster_.sendTransform(trans_grid);
+            broadcaster_.sendTransform(trans_object);
         }
         
         // update SLAM PointCloudMapping thread extrinsic matrix
@@ -227,6 +230,8 @@ namespace ORB_SLAM2_DENSE
                 //update  发布 /grid坐标系的位置
                 tf::StampedTransform trans_grid(tf::Transform(Rmg, tf::Vector3(0, 0, -4)), ros::Time::now(), map_frame_, grid_frame_);
                 broadcaster_.sendTransform(trans_grid);
+                tf::StampedTransform trans_object(tf::Transform(Rmg, tf::Vector3(0, 0, 8)), ros::Time::now(), map_frame_, object_frame_);
+                broadcaster_.sendTransform(trans_object);
             }
 
             // transform point cloud to the plane
@@ -243,6 +248,8 @@ namespace ORB_SLAM2_DENSE
             //update /grid 发布
             tf::StampedTransform trans_grid(Tmo, ros::Time::now(), map_frame_, grid_frame_);
             broadcaster_.sendTransform(trans_grid);
+            tf::StampedTransform trans_object(Tmo, ros::Time::now(), map_frame_, object_frame_);
+            broadcaster_.sendTransform(trans_object);
         }
 
 
