@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from time import time
 from sklearn.svm import SVC
-from ModelType import ModelType
+from room_classifier.ModelType import ModelType
 
 class RoomClassifier:
   ###
