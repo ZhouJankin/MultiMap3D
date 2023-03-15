@@ -222,7 +222,8 @@ protected:
     bool mbUsePlaneSegmentation;
     bool mbSegmentPerFrame;
     double mfPlaneDistThres;
-    double mfFramePlaneDistThres;
+    double mfFramePlaneDistThres_up;
+    double mfFramePlaneDistThres_down;
     Eigen::Vector4d mPlaneCoeffs;
     Eigen::Vector4d mLastPlaneCoeffs;
     
