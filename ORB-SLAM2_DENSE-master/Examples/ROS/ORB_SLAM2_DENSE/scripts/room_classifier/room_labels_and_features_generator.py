@@ -8,6 +8,7 @@ class RoomClassifierTrainingDataGenerator:
   # Initialises the training data generator and attempts to generate the required data based on the gen_flavour parameter.
   ###
   def __init__(self, gen_flavour):
+    print("Generating for: " + gen_flavour.name)
     if gen_flavour == ModelType.FEATURES_12:
         # So we have these features - that's all we know how to detect.
         # Let's construct a few labels (room types) and assign some of these items to them
@@ -23,7 +24,7 @@ class RoomClassifierTrainingDataGenerator:
         (room_types[3], ['table', 'sofa', 'chair', 'bookshelf', 'dresser', 'desk'])
         ]
         
-        self.TRAINING_DATASETS_TO_GENERATE = 16000
+        self.TRAINING_DATASETS_TO_GENERATE = 90
         self.generate_training_data(gen_flavour, room_types, possible_items_in_each_room)
     elif gen_flavour == ModelType.FEATURES_18:
         # Alternative model. We're missing dresser and nightstand and have a few extra features: 
@@ -43,13 +44,13 @@ class RoomClassifierTrainingDataGenerator:
         (room_types[4], ['cabinet', 'chair', 'door', 'window', 'counter', 'refrigerator', 'sink', 'garbagebin'])
         ]
         
-        self.TRAINING_DATASETS_TO_GENERATE = 16000
+        self.TRAINING_DATASETS_TO_GENERATE = 120
         self.generate_training_data(gen_flavour, room_types, possible_items_in_each_room)
     elif gen_flavour == ModelType.AI2_THOR_12:
         detectable_items = ['bed', 'table', 'sofa', 'chair', 'toilet', 'desk', 'dresser',
                        'night_stand', 'bookshelf', 'bathtub'] # these items we can detect with our framework
                        
-        available_items = ['alarmclock', 'apple', 'armchair', 'baseballbat', 'basketball', 'bathtub',
+        available_items = ['aluminumfoil', 'alarmclock', 'apple', 'armchair', 'baseballbat', 'basketball', 'bathtub',
                      'bathtubbasin', 'bed', 'blinds', 'book', 'boots', 'bottle', 'bowl', 'box',
                      'bread', 'butterknife', 'cabinet', 'candle', 'cd', 'cellphone', 'chair', 'cloth',
                      'coffeemachine', 'coffeetable', 'countertop', 'creditcard', 'cup', 'curtains',
@@ -74,7 +75,7 @@ class RoomClassifierTrainingDataGenerator:
                      
         items_transferred_directly = ['bed', 'bathtub', 'chair', 'desk', 'dresser', 'sofa', 'toilet'] # These items are the same in our vocabulary and AI2-THOR. missing: night_stand
                      
-        items_to_remove = ['alarmclock', 'apple', 'baseballbat', 'basketball', 'blinds', 'book', 'boots', 'bottle', 'bowl', 'box',
+        items_to_remove = ['aluminumfoil', 'alarmclock', 'apple', 'baseballbat', 'basketball', 'blinds', 'book', 'boots', 'bottle', 'bowl', 'box',
                      'bread', 'butterknife', 'cabinet', 'candle', 'cd', 'cellphone', 'cloth',
                      'coffeemachine', 'creditcard', 'cup', 'desklamp', 'dishsponge', 'dogbed', 'drawer', 'dumbbell', 'egg', 'faucet', 'floor', 'floorlamp', 'footstool',
                      'fork', 'fridge', 'garbagebag', 'garbagecan', 'handtowel', 'handtowelholder',
@@ -98,7 +99,7 @@ class RoomClassifierTrainingDataGenerator:
                         'refrigerator', 'showercurtrain', 'toilet', 'sink', 'bathtub',
                         'garbagebin'] # these items we can detect with our framework
                                             
-        available_items = ['alarmclock', 'apple', 'armchair', 'baseballbat', 'basketball', 'bathtub',
+        available_items = ['aluminumfoil', 'alarmclock', 'apple', 'armchair', 'baseballbat', 'basketball', 'bathtub',
                      'bathtubbasin', 'bed', 'blinds', 'book', 'boots', 'bottle', 'bowl', 'box',
                      'bread', 'butterknife', 'cabinet', 'candle', 'cd', 'cellphone', 'chair', 'cloth',
                      'coffeemachine', 'coffeetable', 'countertop', 'creditcard', 'cup', 'curtains',
@@ -119,13 +120,13 @@ class RoomClassifierTrainingDataGenerator:
                      
         items_to_convert = ['armchair', 'bathtubbasin', 'coffeetable', 'countertop', 'curtains',
                      'desktop', 'diningtable', 'fridge', 'garbagecan', 
-                     'painting', 'poster', 'shelf', 'shelvingunit', 'showerdoor', 'sidetable', 'sinkbasin'] # these items we will need to convert from AI2-THOR vocabulary to ours
+                     'painting', 'poster', 'shelf', 'shelvingunit', 'showerdoor', 'sidetable', 'sinkbasin', 'showercurtain'] # these items we will need to convert from AI2-THOR vocabulary to ours
         converting_to = ['chair', 'bathtub', 'table', 'counter', 'curtain', 
                      'desk', 'table', 'refrigerator', 'garbagebin', 
-                     'picture', 'picture', 'bookshelf', 'bookshelf', 'door', 'table', 'sink'] # We will convert AI2-THOR vocabulary to this one
+                     'picture', 'picture', 'bookshelf', 'bookshelf', 'door', 'table', 'sink', 'showercurtrain'] # We will convert AI2-THOR vocabulary to this one. Note how we're accomodating the speeling mistake in scannet data where they have 'showercurtrain' instead of 'showercurtain'.
                      
-        items_transferred_directly = ['bathtub', 'bed', 'cabinet', 'chair', 'table', 'desk', 'sink', 'sofa', 'toilet', 'window', 'showercurtain'] # These items are the same in our vocabulary and AI2-THOR.
-        items_to_remove = ['alarmclock', 'apple', 'baseballbat', 'basketball', 'candle', 'cd', 'cellphone', 'cloth',
+        items_transferred_directly = ['bathtub', 'bed', 'cabinet', 'chair', 'table', 'desk', 'sink', 'sofa', 'toilet', 'window'] # These items are the same in our vocabulary and AI2-THOR.
+        items_to_remove = ['aluminumfoil', 'alarmclock', 'apple', 'baseballbat', 'basketball', 'candle', 'cd', 'cellphone', 'cloth',
                      'coffeemachine', 'creditcard', 'cup', 'desklamp', 'garbagebag', 'handtowel', 'handtowelholder',
                      'houseplant', 'kettle', 'keychain', 'knife', 'ladle', 'laptop', 'laundryhamper',
                      'lettuce', 'lightswitch', 'microwave', 'mirror', 'mug', 'newspaper', 'ottoman', 'pan', 'papertowelroll', 'pen', 'pencil', 'peppershaker', 'pillow',
@@ -142,6 +143,53 @@ class RoomClassifierTrainingDataGenerator:
         room_types = ['bedroom', 'bathroom', 'living room', 'kitchen'] # With the detectable models that we have, we'll be able to detect these rooms. There is nothing to detect for kitchen, so dropping that from AI2-THOR room labels.
 
         self.convert_ai2_thor_training_data(gen_flavour, room_types, items_to_remove, items_to_convert, converting_to)
+        
+    elif gen_flavour == ModelType.HYBRID_AT_12:
+        file = open("features_for_each_label_AI2_THOR_12.pkl",'rb')
+        features_for_each_label_ai2thor = pickle.load(file)
+        file.close()
+
+        file = open("labels_shuffled_AI2_THOR_12.pkl",'rb')
+        labels_shuffled_ai2thor = pickle.load(file)
+        file.close()
+        
+        file = open("features_for_each_label_FEATURES_12.pkl",'rb')
+        features_for_each_label_gen_scannet = pickle.load(file)
+        file.close()
+
+        file = open("labels_shuffled_FEATURES_12.pkl",'rb')
+        labels_shuffled_gen_scannet = pickle.load(file)
+        file.close()
+        
+        combined_labels = labels_shuffled_ai2thor + labels_shuffled_gen_scannet
+        combined_features = features_for_each_label_ai2thor + features_for_each_label_gen_scannet
+        print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
+        pickle.dump(combined_labels, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
+        pickle.dump(combined_features, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
+        print("Stored " + str(len(combined_labels)) + " samples for " + gen_flavour.name)
+    elif gen_flavour == ModelType.HYBRID_AT_18:
+        file = open("features_for_each_label_AI2_THOR_18.pkl",'rb')
+        features_for_each_label_ai2thor = pickle.load(file)
+        file.close()
+
+        file = open("labels_shuffled_AI2_THOR_18.pkl",'rb')
+        labels_shuffled_ai2thor = pickle.load(file)
+        file.close()
+        
+        file = open("features_for_each_label_FEATURES_18.pkl",'rb')
+        features_for_each_label_gen_scannet = pickle.load(file)
+        file.close()
+
+        file = open("labels_shuffled_FEATURES_18.pkl",'rb')
+        labels_shuffled_gen_scannet = pickle.load(file)
+        file.close()
+        
+        combined_labels = labels_shuffled_ai2thor + labels_shuffled_gen_scannet
+        combined_features = features_for_each_label_ai2thor + features_for_each_label_gen_scannet
+        print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
+        pickle.dump(combined_labels, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
+        pickle.dump(combined_features, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
+        print("Stored " + str(len(combined_labels)) + " samples for " + gen_flavour.name)
     else:
         raise ValueError("Please select a valid generator flavour")
 
@@ -182,6 +230,7 @@ class RoomClassifierTrainingDataGenerator:
             
     pickle.dump(labels_filtered, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
     pickle.dump(features_for_each_label_filtered, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
+    print("Stored " + str(len(labels_filtered)) + " samples for " + gen_flavour.name)
 
   ###
   # This will generate surrogate training data from scratch by randomising items in each room type from a set of allowed items for that room type.
@@ -191,6 +240,7 @@ class RoomClassifierTrainingDataGenerator:
     training_data = []
 
     # generate some data by randomizing potential objects in each room category
+    print(self.TRAINING_DATASETS_TO_GENERATE)
     for i in range(self.TRAINING_DATASETS_TO_GENERATE):
         rt = random.randrange(0, len(room_types)) # choose room type to generate
         max_item_count_in_room = len(possible_items_in_each_room[rt][1]) # how many classes of items do we have in this type of room
@@ -219,6 +269,8 @@ class RoomClassifierTrainingDataGenerator:
 
     pickle.dump(labels_shuffled, open(labels_fname, "wb"))
     pickle.dump(features_for_each_label, open(features_fname, "wb"))
+    
+    print("Stored " + str(len(labels_shuffled)) + " samples for " + gen_flavour.name)
 
     #print(labels_shuffled)
     #print(features_for_each_label)
@@ -229,7 +281,13 @@ class RoomClassifierTrainingDataGenerator:
 
 # here we make a choice of which model we will generate the samples for.
 #gen_flavour = ModelType.FEATURES_12 
-gen_flavour = ModelType.AI2_THOR_18
+#gen_flavour = ModelType.AI2_THOR_18
+#gen_flavour = ModelType.FEATURES_18
+#gen_flavour = ModelType.HYBRID_AT_18
+
+#gen_flavour = ModelType.AI2_THOR_12
+#gen_flavour = ModelType.FEATURES_12
+gen_flavour = ModelType.HYBRID_AT_12
 
 gen = RoomClassifierTrainingDataGenerator(gen_flavour)
 
