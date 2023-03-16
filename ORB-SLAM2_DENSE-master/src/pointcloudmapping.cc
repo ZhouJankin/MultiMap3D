@@ -80,7 +80,8 @@ mbUseViewer(bUseViewer)
     mbUsePlaneSegmentation = int(fsPlaneSegmentation["UsePlaneSegmentation"]);
     mbSegmentPerFrame = int(fsPlaneSegmentation["SegmentPerFrame"]);
     mfPlaneDistThres = fsPlaneSegmentation["PlaneDistThres"];
-    mfFramePlaneDistThres = fsPlaneSegmentation["FramePlaneDistThres"];
+    mfFramePlaneDistThres_up = fsPlaneSegmentation["FramePlaneDistThres_up"];
+    mfFramePlaneDistThres_down = fsPlaneSegmentation["FramePlaneDistThres_down"];
     
     cout << "---" << endl;
     cout << "Point Cloud Thread Parameters:" << endl;
@@ -94,7 +95,8 @@ mbUseViewer(bUseViewer)
     cout << "\t- UsePlaneSegmentation: " << mbUsePlaneSegmentation << endl;
     cout << "\t- SegmentPerFrame: " << mbSegmentPerFrame << endl;
     cout << "\t- PlaneDistThres: " << mfPlaneDistThres << endl;
-    cout << "\t- FramePlaneDistThres: " << mfFramePlaneDistThres << endl;
+    cout << "\t- FramePlaneDistThres_up: " << mfFramePlaneDistThres_up << endl;
+    cout << "\t- FramePlaneDistThres_down: " << mfFramePlaneDistThres_down << endl;
     
     // start point cloud mapping thread
     mThdRunning = make_shared<thread>( bind(&PointCloudMapping::run, this ) );
@@ -810,7 +812,7 @@ bool PointCloudMapping::framePlaneSegmentation(PointCloud::Ptr &pPclFrame, Point
     pass.setFilterFieldName("z");
     //update 
     //pass.setFilterLimits(-mfFramePlaneDistThres, +mfFramePlaneDistThres);
-    pass.setFilterLimits(-mfFramePlaneDistThres, 0.2);
+    pass.setFilterLimits(mfFramePlaneDistThres_down, mfFramePlaneDistThres_up);
     pass.filter(*pFramePassFilter);
     pass.filter(vFramePassIdxs);
 
