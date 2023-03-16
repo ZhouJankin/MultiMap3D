@@ -105,7 +105,8 @@ class RoomClassifier:
     return result[0]
 
 
-rc = RoomClassifier(True, ModelType.HYBRID_AT_18)
+#rc = RoomClassifier(True, ModelType.HYBRID_AT_18)
+rc = RoomClassifier(True, ModelType.FEATURES_18)
 #rc = RoomClassifier(True, ModelType.HYBRID_AT_12)
 #rc = RoomClassifier(True, ModelType.AI2_THOR_18)
 #rc = RoomClassifier(True, ModelType.AI2_THOR)

@@ -44,6 +44,7 @@ class RoomClassifierTrainingDataGenerator:
         (room_types[4], ['cabinet', 'chair', 'door', 'window', 'counter', 'refrigerator', 'sink', 'garbagebin'])
         ]
         
+        #self.TRAINING_DATASETS_TO_GENERATE = 360
         self.TRAINING_DATASETS_TO_GENERATE = 120
         self.generate_training_data(gen_flavour, room_types, possible_items_in_each_room)
     elif gen_flavour == ModelType.AI2_THOR_12:
@@ -287,7 +288,31 @@ class RoomClassifierTrainingDataGenerator:
 
 #gen_flavour = ModelType.AI2_THOR_12
 #gen_flavour = ModelType.FEATURES_12
-gen_flavour = ModelType.HYBRID_AT_12
+#gen_flavour = ModelType.HYBRID_AT_12
 
-gen = RoomClassifierTrainingDataGenerator(gen_flavour)
+#gen = RoomClassifierTrainingDataGenerator(gen_flavour)
 
+def generateScannet():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_18)
+    
+def generateSunrgbd():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_12)
+    
+def generateAI2Thor_Scannet():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_18)
+    
+def generateAI2Thor_Sunrgbd():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_12)
+    
+def generateHybridAI2Thor_Sunrgbd():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_12)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_12)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.HYBRID_AT_12)
+    
+def generateHybridAI2Thor_Scannet():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_18)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_18)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.HYBRID_AT_18)
+    
+#generateHybridAI2Thor_Scannet()
+generateScannet()
