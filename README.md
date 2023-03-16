@@ -1,6 +1,6 @@
 # MultiMap3D
 
-![avatar](/media/zhou/0EE2C649E2C634AD/MultiMap3D/pics/Multi-map.png)
+![avatar](pics/Multi-map.png)
 
 This repository contains code to build a Multi-level perceptual semantic map in real-time.
 
