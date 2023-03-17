@@ -47,10 +47,10 @@ class RoomClassifier:
 
     # Finally learn and test how good model have we got
     t0 = time()
-    acc = accuracy_score(self.pred, self.labels_test)
+    self.acc = accuracy_score(self.pred, self.labels_test)
     print("accuracy calculation time:", round(time()-t0, 3), "s")
 
-    print("Accuracy = ",acc)
+    print("Accuracy = ",self.acc)
 
     print("Predicted Class for Elem 3:",self.pred[3]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
 
@@ -58,13 +58,20 @@ class RoomClassifier:
     print(self.clf.classes_)
     #########################################################
 
+  def getAccuracy(self):
+    return self.acc;
   ###
   # Loads training data from pickle files and vecorizes the data for use in the SVC
   ###  
   def load_training_data_and_vectorize(self, detector_type):
-    # read our labels from a pickle file
-    self.labels_fname = "room_classifier/labels_shuffled_" + detector_type.name + ".pkl"
-    self.features_fname = "room_classifier/features_for_each_label_" + detector_type.name + ".pkl"
+    # read our labels from a pickle file. We may either be in room_classifier directory or a level above.
+    # So let's see if the files exist here or not.
+    if os.path.isfile("labels_shuffled_" + detector_type.name + ".pkl"):
+        self.labels_fname = "labels_shuffled_" + detector_type.name + ".pkl"
+        self.features_fname = "features_for_each_label_" + detector_type.name + ".pkl"
+    elif os.path.isfile("room_classifier/labels_shuffled_" + detector_type.name + ".pkl"):
+        self.labels_fname = "room_classifier/labels_shuffled_" + detector_type.name + ".pkl"
+        self.features_fname = "room_classifier/features_for_each_label_" + detector_type.name + ".pkl"
 
     file = open(self.features_fname,'rb')
     features_for_each_label = pickle.load(file)
@@ -104,25 +111,28 @@ class RoomClassifier:
     print("Prediction of: " + items_as_string_separated_by_space + " : " + result[0])
     return result[0]
 
+def main():
+    #rc = RoomClassifier(True, ModelType.HYBRID_AT_18)
+    rc = RoomClassifier(True, ModelType.FEATURES_18)
+    #rc = RoomClassifier(True, ModelType.HYBRID_AT_12)
+    #rc = RoomClassifier(True, ModelType.AI2_THOR_18)
+    #rc = RoomClassifier(True, ModelType.AI2_THOR)
+    rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")
+    rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce SaltShaker")
+    rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce")
+    rc.predict("Egg")
+    #rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger ToiletPaper SprayBottle Floor GarbageCan Candle Plunger ScrubBrush Toilet Sink HandTowelHolder Faucet Mirror Cloth Towel Drawer SoapBottle ShowerHead HandTowel LightSwitch ShowerDoor TowelHolder ShowerGlass")
+    #rc.predict("Candle Plunger ScrubBrush Toilet Sink HandTowelHolder SoapBottle")
+    rc.predict("Candle Plunger ScrubBrush Toilet")
+    rc.predict("TV Sofa")
+    rc.predict("ScrubBrush ToiletCandle Plunger")
 
-#rc = RoomClassifier(True, ModelType.HYBRID_AT_18)
-rc = RoomClassifier(True, ModelType.FEATURES_18)
-#rc = RoomClassifier(True, ModelType.HYBRID_AT_12)
-#rc = RoomClassifier(True, ModelType.AI2_THOR_18)
-#rc = RoomClassifier(True, ModelType.AI2_THOR)
-rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger")
-rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce SaltShaker")
-rc.predict("SinkBasin Chair Egg Toaster Microwave CounterTop DiningTable StoveKnob Lettuce")
-rc.predict("Egg")
-#rc.predict("SinkBasin CounterTop SoapBar ToiletPaperHanger ToiletPaper SprayBottle Floor GarbageCan Candle Plunger ScrubBrush Toilet Sink HandTowelHolder Faucet Mirror Cloth Towel Drawer SoapBottle ShowerHead HandTowel LightSwitch ShowerDoor TowelHolder ShowerGlass")
-#rc.predict("Candle Plunger ScrubBrush Toilet Sink HandTowelHolder SoapBottle")
-rc.predict("Candle Plunger ScrubBrush Toilet")
-rc.predict("TV Sofa")
-rc.predict("ScrubBrush ToiletCandle Plunger")
+    rc.predict("sink garbagebin door cabinet counter refrigerator window")
+    rc.predict("window table bed desk")
+    rc.predict("sofa door table window bookshelf curtain desk chair picture")
+    rc.predict("door picture window curtain")
+    rc.predict("garbagebin counter refrigerator cabinet")
 
-rc.predict("sink garbagebin door cabinet counter refrigerator window")
-rc.predict("window table bed desk")
-rc.predict("sofa door table window bookshelf curtain desk chair picture")
-rc.predict("door picture window curtain")
-rc.predict("garbagebin counter refrigerator cabinet")
 
+if __name__ == "__main__":
+    main()
