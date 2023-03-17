@@ -307,14 +307,14 @@ def generateAI2Thor_Scannet():
 def generateAI2Thor_Sunrgbd():
     gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_12)
     
-def generateHybridAI2Thor_Sunrgbd():
+def generateHybridAI2Thor_Sunrgbd(number_of_datasets_to_gen):
     gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_12)
-    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_12)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_12, number_of_datasets_to_gen)
     gen = RoomClassifierTrainingDataGenerator(ModelType.HYBRID_AT_12)
     
-def generateHybridAI2Thor_Scannet():
+def generateHybridAI2Thor_Scannet(number_of_datasets_to_gen):
     gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_18)
-    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_18)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_18, number_of_datasets_to_gen)
     gen = RoomClassifierTrainingDataGenerator(ModelType.HYBRID_AT_18)
     
 
