@@ -167,7 +167,7 @@ class RoomClassifierTrainingDataGenerator:
         
         combined_labels = labels_shuffled_ai2thor + labels_shuffled_gen_scannet
         combined_features = features_for_each_label_ai2thor + features_for_each_label_gen_scannet
-        print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
+        #print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
         pickle.dump(combined_labels, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
         pickle.dump(combined_features, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
         print("Stored " + str(len(combined_labels)) + " samples for " + gen_flavour.name)
@@ -190,7 +190,7 @@ class RoomClassifierTrainingDataGenerator:
         
         combined_labels = labels_shuffled_ai2thor + labels_shuffled_gen_scannet
         combined_features = features_for_each_label_ai2thor + features_for_each_label_gen_scannet
-        print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
+        #print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
         pickle.dump(combined_labels, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
         pickle.dump(combined_features, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
         print("Stored " + str(len(combined_labels)) + " samples for " + gen_flavour.name)

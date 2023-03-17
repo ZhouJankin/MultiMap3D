@@ -28,7 +28,7 @@ class RoomClassifier:
         # Now let's train our SVC
         t0 = time()
         self.clf.fit(self.features_train_vectorized, self.labels_train)
-        print("training time:", round(time()-t0, 3), "s")
+        #print("training time:", round(time()-t0, 3), "s")
         
         # Now let's save our trained parameters
         pickle.dump(self.clf, open("trained_svc_" + detector_type.name + ".pkl", "wb"))
@@ -41,21 +41,21 @@ class RoomClassifier:
             
     t0 = time()
     self.pred = self.clf.predict(self.features_test_vectorized)
-    print("prediction time:", round(time()-t0, 3), "s")
+    #print("prediction time:", round(time()-t0, 3), "s")
 
     from sklearn.metrics import accuracy_score
 
     # Finally learn and test how good model have we got
     t0 = time()
     self.acc = accuracy_score(self.pred, self.labels_test)
-    print("accuracy calculation time:", round(time()-t0, 3), "s")
+    #print("accuracy calculation time:", round(time()-t0, 3), "s")
 
     print("Accuracy = ",self.acc)
 
-    print("Predicted Class for Elem 3:",self.pred[3]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
+    #print("Predicted Class for Elem 3:",self.pred[3]," Class for Elem 8:",self.pred[8]," Class for elem 5:", self.pred[5])
 
-    print("Real Class for Elem 3:",self.labels_test[3]," Real Class for Elem 8:",self.labels_test[8]," Real Class for elem 5:", self.labels_test[5])
-    print(self.clf.classes_)
+    #print("Real Class for Elem 3:",self.labels_test[3]," Real Class for Elem 8:",self.labels_test[8]," Real Class for elem 5:", self.labels_test[5])
+    #print(self.clf.classes_)
     #########################################################
 
   def getAccuracy(self):
@@ -97,9 +97,9 @@ class RoomClassifier:
 
     #print "tfidf.get_stop_words(): ",tfidf.get_stop_words()
     #print "vector: ",vector
-    print(self.features_train_vectorized.shape)
-    print(self.features_test_vectorized.shape)
-    print(self.vectorizer.get_feature_names_out())
+    #print(self.features_train_vectorized.shape)
+    #print(self.features_test_vectorized.shape)
+    #print(self.vectorizer.get_feature_names_out())
 
   ###
   # Uses the cassifier to predict a room based on the input elements found in the room
