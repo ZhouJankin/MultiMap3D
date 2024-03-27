@@ -6,8 +6,11 @@ from ModelType import ModelType
 class RoomClassifierTrainingDataGenerator:
   ###
   # Initialises the training data generator and attempts to generate the required data based on the gen_flavour parameter.
+  # gen_flavour: what datasets we want to generate (choices in ModelType.py)
+  # datasets_to_gen: how many datasets we want. This is only applicable to generated datasets (FEATURES_12 and FEATURES_18) The translated ones (AI2-THOR ones) are always 120
+  # and hybridized ones are whatever was generated for FEATURES_12 or FEATURES_18 + the 120 of AI2-THOR.
   ###
-  def __init__(self, gen_flavour):
+  def __init__(self, gen_flavour, datasets_to_gen = 1000):
     print("Generating for: " + gen_flavour.name)
     if gen_flavour == ModelType.FEATURES_12:
         # So we have these features - that's all we know how to detect.
@@ -24,7 +27,7 @@ class RoomClassifierTrainingDataGenerator:
         (room_types[3], ['table', 'sofa', 'chair', 'bookshelf', 'dresser', 'desk'])
         ]
         
-        self.TRAINING_DATASETS_TO_GENERATE = 90
+        self.TRAINING_DATASETS_TO_GENERATE = datasets_to_gen
         self.generate_training_data(gen_flavour, room_types, possible_items_in_each_room)
     elif gen_flavour == ModelType.FEATURES_18:
         # Alternative model. We're missing dresser and nightstand and have a few extra features: 
@@ -44,7 +47,8 @@ class RoomClassifierTrainingDataGenerator:
         (room_types[4], ['cabinet', 'chair', 'door', 'window', 'counter', 'refrigerator', 'sink', 'garbagebin'])
         ]
         
-        self.TRAINING_DATASETS_TO_GENERATE = 120
+        #self.TRAINING_DATASETS_TO_GENERATE = 360
+        self.TRAINING_DATASETS_TO_GENERATE = datasets_to_gen
         self.generate_training_data(gen_flavour, room_types, possible_items_in_each_room)
     elif gen_flavour == ModelType.AI2_THOR_12:
         detectable_items = ['bed', 'table', 'sofa', 'chair', 'toilet', 'desk', 'dresser',
@@ -163,7 +167,7 @@ class RoomClassifierTrainingDataGenerator:
         
         combined_labels = labels_shuffled_ai2thor + labels_shuffled_gen_scannet
         combined_features = features_for_each_label_ai2thor + features_for_each_label_gen_scannet
-        print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
+        #print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
         pickle.dump(combined_labels, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
         pickle.dump(combined_features, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
         print("Stored " + str(len(combined_labels)) + " samples for " + gen_flavour.name)
@@ -186,7 +190,7 @@ class RoomClassifierTrainingDataGenerator:
         
         combined_labels = labels_shuffled_ai2thor + labels_shuffled_gen_scannet
         combined_features = features_for_each_label_ai2thor + features_for_each_label_gen_scannet
-        print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
+        #print("Storing: " + "labels_shuffled_" + gen_flavour.name + ".pkl")
         pickle.dump(combined_labels, open("labels_shuffled_" + gen_flavour.name + ".pkl", "wb"))
         pickle.dump(combined_features, open("features_for_each_label_" + gen_flavour.name + ".pkl", "wb"))
         print("Stored " + str(len(combined_labels)) + " samples for " + gen_flavour.name)
@@ -287,7 +291,36 @@ class RoomClassifierTrainingDataGenerator:
 
 #gen_flavour = ModelType.AI2_THOR_12
 #gen_flavour = ModelType.FEATURES_12
-gen_flavour = ModelType.HYBRID_AT_12
+#gen_flavour = ModelType.HYBRID_AT_12
 
-gen = RoomClassifierTrainingDataGenerator(gen_flavour)
+#gen = RoomClassifierTrainingDataGenerator(gen_flavour)
 
+def generateScannet():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_18)
+    
+def generateSunrgbd():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_12)
+    
+def generateAI2Thor_Scannet():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_18)
+    
+def generateAI2Thor_Sunrgbd():
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_12)
+    
+def generateHybridAI2Thor_Sunrgbd(number_of_datasets_to_gen):
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_12)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_12, number_of_datasets_to_gen)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.HYBRID_AT_12)
+    
+def generateHybridAI2Thor_Scannet(number_of_datasets_to_gen):
+    gen = RoomClassifierTrainingDataGenerator(ModelType.AI2_THOR_18)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.FEATURES_18, number_of_datasets_to_gen)
+    gen = RoomClassifierTrainingDataGenerator(ModelType.HYBRID_AT_18)
+    
+
+def main():
+    #generateHybridAI2Thor_Scannet()
+    generateScannet()
+
+if __name__ == "__main__":
+    main()
