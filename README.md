@@ -4,6 +4,8 @@
 
 This repository contains code to build a Multi-level perceptual semantic map in real-time.
 
+**Paper**:[MultiMap3D: A Multi-Level Semantic Perceptual Map Construction Based on SLAM and Point Cloud Detection](https://ieeexplore.ieee.org/document/10275205)
+
  We use [ORB-SLAM2](https://github.com/raulmur/ORB_SLAM2) as the slam part and [FCAF3D](https://github.com/SamsungLabs/fcaf3d) to achieve point cloud detection. we have to mention that our orb-slam2's work also based this work->[ORB-SLAM2_DENSE](https://github.com/IATBOMSW/ORB-SLAM2_DENSE).
 
 
