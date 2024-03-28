@@ -41,6 +41,7 @@ create a conda environment
 
 ```shell
 conda create -n Multimap3D python=3.8
+conda activate Multimap3D
 
 ```
 
